@@ -1,14 +1,23 @@
 {
   "version": 2,
-  "framework": "vite",
-  "buildCommand": "cd client && npm run build",
-  "outputDirectory": "client/dist",
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist/public",
   "installCommand": "npm install",
   "functions": {
-    "api/**/*.ts": {
+    "server/index.ts": {
       "runtime": "@vercel/node@3.0.0"
     }
   },
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "/server/index.ts"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/$1"
+    }
+  ],
   "env": {
     "USE_REAL_API": "true"
   }
