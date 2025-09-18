@@ -36,9 +36,9 @@ export class CoinGeckoAPIService {
   private readonly defaultTTL = 60000; // 1 minute default TTL
   
   constructor() {
-    // Use environment variables for configuration
+    // environment variables for configuration
     this.baseUrl = process.env.COINGECKO_API_URL || 'https://api.coingecko.com/api/v3';
-    this.apiKey = process.env.COINGECKO_API_KEY; // Optional for free tier
+    this.apiKey = process.env.COINGECKO_API_KEY; // using free tier
   }
 
   private async fetchWithTimeout(url: string, timeoutMs: number = 10000): Promise<Response> {
@@ -179,7 +179,7 @@ export class CoinGeckoAPIService {
       doge: '#c2a633',
     };
     
-    return colorMap[symbol] || '#6366f1'; // Default purple color
+    return colorMap[symbol] || '#6366f1'; // Default colour
   }
 }
 

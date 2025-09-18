@@ -189,7 +189,7 @@ export class MemStorage implements IStorage {
   }
 }
 
-// Environment-based storage selection for Vercel/Replit compatibility
+
 class ApiStorage implements IStorage {
   async getCryptocurrencies(): Promise<Cryptocurrency[]> {
     return await coinGeckoService.getCryptocurrencies(50);

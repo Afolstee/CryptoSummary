@@ -23,7 +23,7 @@ export function initializeDatabase() {
   return db;
 }
 
-// Lazy initialization - only create connection when actually needed
+// only create connection when actually needed
 export function getDatabase() {
   if (!db && process.env.DATABASE_URL) {
     return initializeDatabase();
