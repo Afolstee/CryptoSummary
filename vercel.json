@@ -18,6 +18,7 @@
       "dest": "/index.html"
     }
   ],
+  "nodeVersion": "20.x",
   "env": {
     "USE_REAL_API": "true"
   }
