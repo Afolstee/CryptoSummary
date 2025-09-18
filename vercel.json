@@ -1,0 +1,15 @@
+{
+  "version": 2,
+  "framework": "vite",
+  "buildCommand": "cd client && npm run build",
+  "outputDirectory": "client/dist",
+  "installCommand": "npm install",
+  "functions": {
+    "api/*.ts": {
+      "runtime": "nodejs18.x"
+    }
+  },
+  "env": {
+    "USE_REAL_API": "true"
+  }
+}

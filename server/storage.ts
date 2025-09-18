@@ -1,5 +1,6 @@
 import { type Cryptocurrency, type InsertCryptocurrency, type MarketStats, type InsertMarketStats } from "@shared/schema";
 import { randomUUID } from "crypto";
+import { coinGeckoService } from "./api-service";
 
 export interface IStorage {
   getCryptocurrencies(): Promise<Cryptocurrency[]>;
@@ -188,4 +189,44 @@ export class MemStorage implements IStorage {
   }
 }
 
-export const storage = new MemStorage();
+// Environment-based storage selection for Vercel/Replit compatibility
+class ApiStorage implements IStorage {
+  async getCryptocurrencies(): Promise<Cryptocurrency[]> {
+    return await coinGeckoService.getCryptocurrencies(50);
+  }
+
+  async getCryptocurrency(id: string): Promise<Cryptocurrency | undefined> {
+    const cryptos = await this.getCryptocurrencies();
+    return cryptos.find(crypto => crypto.id === id);
+  }
+
+  async updateCryptocurrency(id: string, data: Partial<InsertCryptocurrency>): Promise<Cryptocurrency | undefined> {
+    // For external APIs, we don't update data - return current data
+    return this.getCryptocurrency(id);
+  }
+
+  async getMarketStats(): Promise<MarketStats | undefined> {
+    return await coinGeckoService.getMarketStats();
+  }
+
+  async updateMarketStats(data: InsertMarketStats): Promise<MarketStats> {
+    // For external APIs, we don't update data - return current data  
+    const stats = await this.getMarketStats();
+    return stats || {
+      id: randomUUID(),
+      ...data,
+      updatedAt: new Date(),
+    };
+  }
+}
+
+// Use environment variable to determine data source
+// Set USE_REAL_API=true for production, leave unset for mock data
+const useRealAPI = process.env.USE_REAL_API === 'true' || process.env.NODE_ENV === 'production';
+
+export const storage: IStorage = useRealAPI ? new ApiStorage() : new MemStorage();
+
+// Log which storage method is being used (remove this for production)
+if (process.env.NODE_ENV === 'development') {
+  console.log(`🔧 Using ${useRealAPI ? 'Real CoinGecko API' : 'Mock Data'} for cryptocurrency data`);
+}
